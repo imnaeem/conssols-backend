@@ -11,7 +11,7 @@ import {
 
 const router = express.Router();
 
-router.get("/api/find-companies", getComapnies);
+router.get("/find-companies", getComapnies);
 router.get("/find-projects", getProjects);
 router.post("/find-projects", sendProposal);
 
