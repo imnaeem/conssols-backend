@@ -55,6 +55,12 @@ const upload = multer({ storage: fileStorage, fileFilter: imageFilter }).single(
 );
 
 // app.use("/company/profile", upload, CompanyProfile);
+app.use("/company", companyRoutes);
+app.use("/client", clientRoutes);
+app.use("/admin", adminRoutes);
+
+app.use("/", homeRoutes);
+app.use("/user", authRoute);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
@@ -65,13 +71,6 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
   });
 }
-
-app.use("/company", companyRoutes);
-app.use("/client", clientRoutes);
-app.use("/admin", adminRoutes);
-
-app.use("/", homeRoutes);
-app.use("/user", authRoute);
 
 const PORT = process.env.PORT || 5000;
 
