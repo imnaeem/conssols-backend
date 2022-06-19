@@ -256,56 +256,115 @@ export const getSearchedCompanies = async (req, res) => {
   if (
     req.query.employees === "" &&
     req.query.rate === "" &&
-    (promoted === true || promoted === false)
+    promoted === false
   ) {
     query = {
       $match: {
-        $and: [{ username: { $ne: "" } }, { isPromoted: { $eq: promoted } }],
+        username: { $ne: "" },
       },
     };
   }
 
-  if (req.query.employees === "" && req.query.rate === "") {
+  if (
+    req.query.employees === "" &&
+    req.query.rate === "" &&
+    promoted === true
+  ) {
     query = {
       $match: {
-        $and: [{ username: { $ne: "" } }, { isPromoted: { $eq: promoted } }],
+        $and: [{ username: { $ne: "" } }, { isPromoted: { $eq: true } }],
       },
     };
   }
 
-  if (req.query.employees !== "" && req.query.rate !== "") {
+  if (
+    req.query.employees !== "" &&
+    req.query.rate !== "" &&
+    promoted === true
+  ) {
     query = {
       $match: {
         $and: [
           { rate: { $eq: req.query.rate } },
           { employees: { $eq: req.query.employees } },
           { username: { $ne: "" } },
-          { isPromoted: { $eq: promoted } },
+          { isPromoted: { $eq: true } },
         ],
       },
     };
   }
 
-  if (req.query.employees !== "" && req.query.rate === "") {
+  if (
+    req.query.employees !== "" &&
+    req.query.rate !== "" &&
+    promoted === false
+  ) {
+    query = {
+      $match: {
+        $and: [
+          { rate: { $eq: req.query.rate } },
+          { employees: { $eq: req.query.employees } },
+          { username: { $ne: "" } },
+        ],
+      },
+    };
+  }
+
+  if (
+    req.query.employees !== "" &&
+    req.query.rate === "" &&
+    promoted === true
+  ) {
     query = {
       $match: {
         $and: [
           { employees: { $eq: req.query.employees } },
           { username: { $ne: "" } },
-          { isPromoted: { $eq: promoted } },
+          { isPromoted: { $eq: true } },
         ],
       },
     };
   }
 
-  if (req.query.employees === "" && req.query.rate !== "") {
+  if (
+    req.query.employees !== "" &&
+    req.query.rate === "" &&
+    promoted === false
+  ) {
+    query = {
+      $match: {
+        $and: [
+          { employees: { $eq: req.query.employees } },
+          { username: { $ne: "" } },
+        ],
+      },
+    };
+  }
+
+  if (
+    req.query.employees === "" &&
+    req.query.rate !== "" &&
+    promoted === true
+  ) {
     query = {
       $match: {
         $and: [
           { rate: { $eq: req.query.rate } },
           { username: { $ne: "" } },
-          { isPromoted: { $eq: promoted } },
+          { isPromoted: { $eq: true } },
         ],
+      },
+    };
+  }
+
+  if (
+    req.query.employees === "" &&
+    req.query.rate !== "" &&
+    promoted === false
+  ) {
+    query = {
+      $match: {
+        $and: [{ rate: { $eq: req.query.rate } }, { username: { $ne: "" } }],
       },
     };
   }
