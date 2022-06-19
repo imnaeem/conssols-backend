@@ -23,12 +23,12 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 
 // app.use("/company/profile", upload, CompanyProfile);
-app.use("/company/api", companyRoutes);
-app.use("/client/api", clientRoutes);
-app.use("/admin/api", adminRoutes);
+app.use("/api/company", companyRoutes);
+app.use("/api/client", clientRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.use("/api", homeRoutes);
-app.use("/user/api", authRoute);
+app.use("/api/user", authRoute);
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
