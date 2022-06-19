@@ -4,8 +4,6 @@ import mongoose from "mongoose";
 import cors from "cors";
 import multer from "multer";
 import path from "path";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
 
 import authRoute from "./routes/auth.js";
 import companyRoutes from "./routes/companyRoutes.js";
@@ -22,39 +20,6 @@ app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-app.use(express.static(__dirname + "/public"));
-
-const fileStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "public/images/");
-  },
-  filename: (req, file, cb) => {
-    cb(
-      null,
-      file.originalname +
-        "_" +
-        // new Date().toLocaleDateString("es-CL") +
-        // Date.now() +
-        path.extname(file.originalname)
-    );
-  },
-});
-
-const imageFilter = function (req, file, cb) {
-  // Accept images only
-  if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
-    req.fileValidationError = "Only image files are allowed!";
-    return cb(new Error("Only image files are allowed!"), false);
-  }
-  cb(null, true);
-};
-
-const upload = multer({ storage: fileStorage, fileFilter: imageFilter }).single(
-  "profileImage"
-);
-
-// app.use("/company/profile", upload, CompanyProfile);
 app.use("/company", companyRoutes);
 app.use("/client", clientRoutes);
 app.use("/admin", adminRoutes);
