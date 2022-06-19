@@ -14,11 +14,6 @@ import homeRoutes from "./routes/homeRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import dotenv from "dotenv";
 
-import { fileURLToPath } from "url";
-import { dirname } from "path";
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
 const app = express();
 
 dotenv.config();
@@ -34,6 +29,8 @@ app.use("/admin", adminRoutes);
 
 app.use("/", homeRoutes);
 app.use("/user", authRoute);
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
