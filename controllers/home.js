@@ -253,6 +253,18 @@ export const getSearchedCompanies = async (req, res) => {
 
   let query;
 
+  if (
+    req.query.employees === "" &&
+    req.query.rate === "" &&
+    (promoted === true || promoted === false)
+  ) {
+    query = {
+      $match: {
+        $and: [{ username: { $ne: "" } }, { isPromoted: { $eq: promoted } }],
+      },
+    };
+  }
+
   if (req.query.employees === "" && req.query.rate === "") {
     query = {
       $match: {
