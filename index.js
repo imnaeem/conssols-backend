@@ -59,7 +59,6 @@ app.use("/company", companyRoutes);
 app.use("/client", clientRoutes);
 app.use("/admin", adminRoutes);
 
-app.use("/", homeRoutes);
 app.use("/user", authRoute);
 
 if (process.env.NODE_ENV === "production") {
@@ -71,6 +70,8 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
   });
 }
+
+app.use("/", homeRoutes);
 
 const PORT = process.env.PORT || 5000;
 
