@@ -48,8 +48,9 @@ export const signup = async (req, res) => {
       type,
     });
 
-    //console.log(result);
-    await CompanyProfile.create({ companyName, userId: result._id });
+    if (companySignup) {
+      await CompanyProfile.create({ companyName, userId: result._id });
+    }
 
     const token = jwt.sign({ email: result.email, id: result._id }, secret, {
       expiresIn: "2h",
