@@ -79,7 +79,7 @@ export const signin = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
 
     const token = jwt.sign({ email: oldUser.email, id: oldUser._id }, secret, {
-      expiresIn: "2h",
+      expiresIn: "60s",
     });
 
     res.status(200).json({ result: oldUser, token });
