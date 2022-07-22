@@ -1,18 +1,16 @@
 import express from "express";
 import bodyParser from "body-parser";
-import mongoose from "mongoose";
 import cors from "cors";
-import multer from "multer";
 import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
-
 import authRoute from "./routes/auth.js";
 import companyRoutes from "./routes/companyRoutes.js";
 import clientRoutes from "./routes/clientRoutes.js";
 import homeRoutes from "./routes/homeRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import dotenv from "dotenv";
+import dbConnection from "./dbConnection.js";
 
 const app = express();
 
@@ -41,13 +39,4 @@ if (process.env.NODE_ENV === "production") {
 
 // DB Connection
 
-const PORT = process.env.PORT || 5000;
-
-mongoose
-  .connect(process.env.CONNECTION_URL, { useNewUrlParser: true })
-  .then(() =>
-    app.listen(PORT, () =>
-      console.log(`Server Running on Port: http://localhost:${PORT}`)
-    )
-  )
-  .catch((error) => console.log(`${error} did not connect`));
+dbConnection(app);
