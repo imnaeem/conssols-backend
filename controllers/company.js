@@ -15,30 +15,49 @@ export const updateCompany = async (req, res) => {
     });
   }
   const updatedCompany = req.body;
+  console.log(req.body);
 
-  try {
-    const checkUsername = await CompanyProfile.findOne({
-      $and: [
-        { username: req.body.username },
-        { userId: { $ne: req.body.userId } },
-      ],
-    });
-    if (checkUsername) {
-      res.status(400).json({ message: "Username already taken!" });
-    } else {
-      const address = updatedCompany.address;
-      address.formatted =
-        address.streetAddress +
-        ", " +
-        address.city +
-        ", " +
-        address.state +
-        ", " +
-        address.country;
+  if (req.body.username) {
+    try {
+      const checkUsername = await CompanyProfile.findOne({
+        $and: [
+          { username: req.body.username },
+          { userId: { $ne: req.body.userId } },
+        ],
+      });
+      if (checkUsername) {
+        res.status(400).json({ message: "Username already taken!" });
+      } else {
+        const address = updatedCompany.address;
+        address.formatted =
+          address.streetAddress +
+          ", " +
+          address.city +
+          ", " +
+          address.state +
+          ", " +
+          address.country;
 
+        const updated = await CompanyProfile.findOneAndUpdate(
+          { userId: updatedCompany.userId },
+          updatedCompany,
+          {
+            new: true,
+          },
+          (err) => {
+            if (err) console.log(err);
+          }
+        ).clone();
+        res.status(200).json(updated);
+      }
+    } catch (error) {
+      res.status(404).json({ message: error.message });
+    }
+  } else {
+    try {
       const updated = await CompanyProfile.findOneAndUpdate(
-        { userId: updatedCompany.userId },
-        updatedCompany,
+        { userId: req.body.userId },
+        { companyImage: req.body.companyImage },
         {
           new: true,
         },
@@ -47,9 +66,9 @@ export const updateCompany = async (req, res) => {
         }
       ).clone();
       res.status(200).json(updated);
+    } catch (error) {
+      res.status(404).json({ message: error.message });
     }
-  } catch (error) {
-    res.status(404).json({ message: error.message });
   }
 };
 
@@ -74,99 +93,6 @@ export const getCompanyProfile = async (req, res) => {
     res.status(200).json(company);
   } catch (error) {
     res.status(404).json({ message: error.message });
-  }
-};
-
-export const getCompanyUser = async (req, res) => {
-  if (!req.authenticationId) {
-    return res.json({
-      message: "Your are not authorized to perform this action",
-    });
-  }
-  // console.log(req.query.id);
-  try {
-    const user = await UserProfile.findOne({ _id: req.query.id });
-
-    user["registerAt"] = undefined;
-    user["__v"] = undefined;
-    user["companySignup"] = undefined;
-    user["password"] = undefined;
-
-    //console.log(user);
-    res.status(200).json(user);
-  } catch (error) {
-    res.status(404).json({ message: error.message });
-  }
-};
-
-export const updateCompanyUser = async (req, res) => {
-  if (!req.authenticationId) {
-    return res.json({
-      message: "Your are not authorized to perform this action",
-    });
-  }
-  //console.log(req.body.email);
-  const {
-    firstName,
-    lastName,
-    email,
-    oldPassword,
-    newPassword,
-    userImage,
-    updatePassword,
-  } = req.body;
-
-  try {
-    const oldUser = await UserProfile.findOne({ email });
-
-    if (!oldUser)
-      return res.status(404).json({ message: "User doesn't exist" });
-
-    // console.log(oldUser.email);
-
-    let updatedUser;
-    if (updatePassword) {
-      const isPasswordCorrect = await bcrypt.compare(
-        oldPassword,
-        oldUser.password
-      );
-
-      //console.log(isPasswordCorrect);
-
-      if (!isPasswordCorrect)
-        return res.status(400).json({ message: "Old Password is incorrect" });
-
-      const hashedPassword = await bcrypt.hash(newPassword, 12);
-
-      updatedUser = {
-        firstName,
-        lastName,
-        userImage,
-        password: hashedPassword,
-      };
-
-      // updatedUser.password = hashedPassword;
-    } else {
-      updatedUser = {
-        firstName,
-        lastName,
-        userImage,
-      };
-    }
-
-    const newUser = await UserProfile.findOneAndUpdate(
-      { email: email },
-      updatedUser,
-      {
-        new: true,
-      }
-    );
-
-    //console.log(newUser.email);
-
-    res.status(200).json(newUser);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
   }
 };
 

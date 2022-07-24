@@ -37,7 +37,7 @@ export const getComapnies = async (req, res) => {
 
 export const getProjects = async (req, res) => {
   const userId = req.query.id;
-  //console.log(userId);
+  console.log(userId);
 
   if (userId) {
     Project.aggregate([
@@ -93,31 +93,6 @@ export const getProjects = async (req, res) => {
         res.status(500).json({ message: "Somethisssng went wrong" });
       });
   }
-
-  // try {
-  //   const activeProjects = await Project.find({ status: "active" }, { _id: 1 });
-
-  //   const projectsWithProposals = await Proposal.find(
-  //     {
-  //       $and: [
-  //         { userId: req.query.id },
-  //         { projectId: { $in: activeProjects } },
-  //       ],
-  //     },
-  //     { _id: 0, projectId: 1 }
-  //   );
-
-  //   const stringsIds = projectsWithProposals.map((id) =>
-  //     id.projectId.toString()
-  //   );
-
-  //   const projects = await Project.find({
-  //     $and: [{ status: "active" }, { _id: { $nin: stringsIds } }],
-  //   });
-  //   res.status(200).json(projects);
-  // } catch (error) {
-  //   res.status(404).json({ message: error.message });
-  // }
 };
 
 export const sendProposal = async (req, res) => {

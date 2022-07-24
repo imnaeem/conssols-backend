@@ -2,8 +2,6 @@ import express from "express";
 import {
   updateCompany,
   getCompanyProfile,
-  updateCompanyUser,
-  getCompanyUser,
   addCompanyPortfolio,
   getCompanyPortfolio,
   getCompanyProposals,
@@ -19,9 +17,6 @@ const router = express.Router();
 
 router.patch("/edit-company", auth, updateCompany);
 router.get("/edit-company", auth, getCompanyProfile);
-
-router.patch("/profile", auth, updateCompanyUser);
-router.get("/profile", auth, getCompanyUser);
 
 router.post("/add-portfolio", auth, addCompanyPortfolio);
 
