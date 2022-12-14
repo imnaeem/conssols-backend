@@ -155,11 +155,6 @@ export const currentCompanyReviews = async (req, res) => {
       { username: req.query.username },
       { _id: 1 }
     );
-    // console.log(companyId);
-
-    // const reviews = await Review.find({ companyId: companyId._id.toString() });
-
-    // console.log(reviews);
 
     await Review.aggregate([
       { $match: { companyId: companyId._id } },
@@ -224,15 +219,12 @@ export const sendMessage = async (req, res) => {
 };
 
 export const getSearchedCompanies = async (req, res) => {
-  var promoted = req.query.featured === "true";
+  const { employees, rate, featured } = req.query;
+  const promoted = featured === "true";
 
   let query;
 
-  if (
-    req.query.employees === "" &&
-    req.query.rate === "" &&
-    promoted === false
-  ) {
+  if (!employees && !rate && !promoted) {
     query = {
       $match: {
         username: { $ne: "" },
@@ -240,11 +232,7 @@ export const getSearchedCompanies = async (req, res) => {
     };
   }
 
-  if (
-    req.query.employees === "" &&
-    req.query.rate === "" &&
-    promoted === true
-  ) {
+  if (!employees && !rate && promoted) {
     query = {
       $match: {
         $and: [{ username: { $ne: "" } }, { isPromoted: { $eq: true } }],
@@ -252,16 +240,12 @@ export const getSearchedCompanies = async (req, res) => {
     };
   }
 
-  if (
-    req.query.employees !== "" &&
-    req.query.rate !== "" &&
-    promoted === true
-  ) {
+  if (employees && rate && promoted) {
     query = {
       $match: {
         $and: [
-          { rate: { $eq: req.query.rate } },
-          { employees: { $eq: req.query.employees } },
+          { rate: { $eq: rate } },
+          { employees: { $eq: employees } },
           { username: { $ne: "" } },
           { isPromoted: { $eq: true } },
         ],
@@ -269,31 +253,23 @@ export const getSearchedCompanies = async (req, res) => {
     };
   }
 
-  if (
-    req.query.employees !== "" &&
-    req.query.rate !== "" &&
-    promoted === false
-  ) {
+  if (employees && rate && !promoted) {
     query = {
       $match: {
         $and: [
-          { rate: { $eq: req.query.rate } },
-          { employees: { $eq: req.query.employees } },
+          { rate: { $eq: rate } },
+          { employees: { $eq: employees } },
           { username: { $ne: "" } },
         ],
       },
     };
   }
 
-  if (
-    req.query.employees !== "" &&
-    req.query.rate === "" &&
-    promoted === true
-  ) {
+  if (employees && !rate && promoted) {
     query = {
       $match: {
         $and: [
-          { employees: { $eq: req.query.employees } },
+          { employees: { $eq: employees } },
           { username: { $ne: "" } },
           { isPromoted: { $eq: true } },
         ],
@@ -301,30 +277,19 @@ export const getSearchedCompanies = async (req, res) => {
     };
   }
 
-  if (
-    req.query.employees !== "" &&
-    req.query.rate === "" &&
-    promoted === false
-  ) {
+  if (employees && !rate && !promoted) {
     query = {
       $match: {
-        $and: [
-          { employees: { $eq: req.query.employees } },
-          { username: { $ne: "" } },
-        ],
+        $and: [{ employees: { $eq: employees } }, { username: { $ne: "" } }],
       },
     };
   }
 
-  if (
-    req.query.employees === "" &&
-    req.query.rate !== "" &&
-    promoted === true
-  ) {
+  if (!employees && rate && promoted) {
     query = {
       $match: {
         $and: [
-          { rate: { $eq: req.query.rate } },
+          { rate: { $eq: rate } },
           { username: { $ne: "" } },
           { isPromoted: { $eq: true } },
         ],
@@ -332,14 +297,10 @@ export const getSearchedCompanies = async (req, res) => {
     };
   }
 
-  if (
-    req.query.employees === "" &&
-    req.query.rate !== "" &&
-    promoted === false
-  ) {
+  if (!employees && rate && !promoted) {
     query = {
       $match: {
-        $and: [{ rate: { $eq: req.query.rate } }, { username: { $ne: "" } }],
+        $and: [{ rate: { $eq: rate } }, { username: { $ne: "" } }],
       },
     };
   }

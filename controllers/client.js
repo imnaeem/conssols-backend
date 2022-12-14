@@ -29,7 +29,7 @@ export const getClientProjects = async (req, res) => {
       message: "Your are not authorized to perform this action",
     });
   }
-  //   console.log(req.query.projectId);
+  //console.log("hello", req.query);
 
   try {
     if (req.query.projectId) {
@@ -105,7 +105,6 @@ export const getProposalCompany = async (req, res) => {
       message: "Your are not authorized to perform this action",
     });
   }
-  // console.log(req.query.proposalId);
 
   try {
     const proposal = await Proposal.findOne(
