@@ -9,6 +9,7 @@ import companyRoutes from "./routes/companyRoutes.js";
 import clientRoutes from "./routes/clientRoutes.js";
 import homeRoutes from "./routes/homeRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+import uploadRoutes from "./routes/uploadRoutes.js";
 import dotenv from "dotenv";
 import dbConnection from "./dbConnection.js";
 
@@ -23,6 +24,7 @@ app.use(cors());
 app.use("/api/company", companyRoutes);
 app.use("/api/client", clientRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/upload", uploadRoutes);
 app.use("/api", homeRoutes);
 app.use("/api/user", authRoute);
 
