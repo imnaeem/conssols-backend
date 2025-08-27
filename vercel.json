@@ -16,5 +16,8 @@
     "index.js": {
       "runtime": "nodejs18.x"
     }
+  },
+  "env": {
+    "NODE_ENV": "production"
   }
 }
